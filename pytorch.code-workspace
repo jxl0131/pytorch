@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../Illumination-Estimation-1/RegressionNetwork"
+		},
+		{
+			"path": ".."
 		}
 	],
 	"settings": {}
