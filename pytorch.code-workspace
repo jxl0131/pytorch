@@ -8,6 +8,12 @@
 		},
 		{
 			"path": ".."
+		},
+		{
+			"path": "../Illumination-Estimation-1"
+		},
+		{
+			"path": "../datasets"
 		}
 	],
 	"settings": {}

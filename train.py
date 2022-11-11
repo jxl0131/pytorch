@@ -1,10 +1,11 @@
 import torch
+import os
 from torch import nn
 from torch.optim.lr_scheduler import ExponentialLR
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor
-
+os.environ["CUDA_VISIBLE_DEVICES"] = '2'
 """
 PyTorch offers domain-specific libraries such as TorchText, TorchVision, and TorchAudio, all of which include datasets. For this tutorial, we will be using a TorchVision dataset.
 The torchvision.datasets module contains Dataset objects for many real-world vision data like CIFAR, COCO (full list here). In this tutorial, we use the FashionMNIST dataset. Every TorchVision Dataset includes two arguments: transform and target_transform to modify the samples and labels respectively.
@@ -32,7 +33,7 @@ test_data = datasets.FashionMNIST(
 We pass the Dataset as an argument to DataLoader. This wraps an iterable over our dataset, and supports automatic batching, sampling, shuffling and multiprocess data loading. Here we define a batch size of 64, i.e. each element in the dataloader iterable will return a batch of 64 features and labels.
 """
 
-batch_size = 64
+batch_size = 128
 
 # Create data loaders.
 train_dataloader = DataLoader(training_data, batch_size=batch_size)
@@ -45,7 +46,9 @@ for X, y in test_dataloader:
 
 
 """
-To define a neural network in PyTorch, we create a class that inherits from nn.Module. We define the layers of the network in the __init__ function and specify how data will pass through the network in the forward function. To accelerate operations in the neural network, we move it to the GPU if available.
+To define a neural network in PyTorch, we create a class that inherits from nn.Module. 
+We define the layers of the network in the __init__ function and specify how data will pass through the network in the forward function. 
+To accelerate operations in the neural network, we move it to the GPU if available.
 """
 
 # Get cpu or gpu device for training.
@@ -72,7 +75,7 @@ class NeuralNetwork(nn.Module):
 
 model = NeuralNetwork().to(device)
 
-loadModel = False
+loadModel = True
 if loadModel:
     model.load_state_dict(torch.load("model.pth"))
 
@@ -92,7 +95,7 @@ for name, param in model.named_parameters():
 
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
-scheduler = ExponentialLR(optimizer, gamma=0.9)
+scheduler = ExponentialLR(optimizer, gamma=0.9,verbose=True)
 
 """
 In a single training loop, the model makes predictions on the training dataset (fed to it in batches), and backpropagates the prediction error to adjust the model’s parameters.
@@ -136,7 +139,7 @@ def test(dataloader, model, loss_fn):
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
 
 print(torch.cuda.current_device())
-epochs = 5
+epochs = 100
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train(train_dataloader, model, loss_fn, optimizer)

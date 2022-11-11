@@ -28,7 +28,7 @@ def example(rank, world_size):
     optimizer.step()
 
 def main():
-    world_size = 2
+    world_size = 2 #这个地方改成大于2的数就报错，原因目前不明。
     mp.spawn(example,
         args=(world_size,),
         nprocs=world_size,
