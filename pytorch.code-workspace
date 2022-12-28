@@ -14,6 +14,12 @@
 		},
 		{
 			"path": "../datasets"
+		},
+		{
+			"path": "../tf-logs"
+		},
+		{
+			"path": "../Illumination-Estimation-1/GenProjector"
 		}
 	],
 	"settings": {}
